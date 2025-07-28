@@ -1,0 +1,222 @@
+/*
+Template Name: Moonlit - Hotel and Resturant HTML Tailwind Template
+Author: Reacthemes
+Author URI: https://themeforest.net/user/reacthemes
+Tags: Hotel, Resturant, Spa, Message, Honeymoon, Booking
+Version: 1.0
+*/
+@import "default/serialize";
+@import url('https://fonts.googleapis.com/css2?family=Gilda+Display&family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+@import "mixin/mixin";
+@tailwind base;
+@layer base {
+      body {
+        @apply font-jost text-para text-base leading-sm;
+      }
+}
+@tailwind components;
+@layer component {
+  .subtitle {
+    @apply relative inline-block mb-0 after:absolute after:bottom-[50%] after:w-[52px] after:h-[12px] after:bg-[url('../images/shape/right.svg')] after:bg-no-repeat after:right-[-65px] before:absolute before:bottom-[50%] before:w-[52px] before:h-[12px] before:bg-[url('../images/shape/left.svg')] before:bg-no-repeat before:left-[-65px] text-[24px] after:!translate-y-2/4 before:!translate-y-2/4 text-white;
+  }
+  .jara-mask-1 {
+    width: 100%;
+    padding-top: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .jara-mask-2 {
+    width: 100%;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .image__card{
+    padding: 22px 30px 22px 22px;
+    box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.16);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    max-width: max-content;
+    background-color: white;
+    position: absolute;
+    top: 40px;
+    right: -100px;
+    @include mq($sm){
+      right: 0;
+      bottom: 0;
+      top: unset;
+    }
+  }
+  .__clip__path__{
+    clip-path: polygon(69.249% 0%, 0% 0%, 0% 100%, 99.939% 100%, 99.939% 50%, 69.249% 50%, 69.249% 0%);
+  }
+  .query__input {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 6px;
+    align-items: center;
+    background-color: var(--rts-gray);
+    label{
+      display: block;
+      font-size: 20px;
+      font-family: var(--glida);
+      color: var(--rts-heading);
+      position: relative;
+      cursor: pointer;
+      &::before{
+        content: "";
+        -webkit-appearance: none;
+        background-color: transparent;
+        border: 1px solid var(--heading-color);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+        padding: 6px;
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        cursor: pointer;
+        border-radius: 6px;
+        margin-right: 20px;
+        top: -2px;
+        height: 20px;
+        width: 20px;
+      }
+    }
+  }
+  .checkbox input:checked + label::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 5px;
+    left: 7px;
+    width: 6px;
+    height: 12px;
+    border: solid #ab8a62;
+    border-width: 0 1px 1px 0;
+    transform: rotate(45deg);
+  }
+  .is__clip__path{
+    clip-path: polygon(0% 100%, 0% 0%, 100% 0%, 100% 100%, 100% 100%, 89.246% 91.898%, 78.025% 86.489%, 66.575% 83.438%, 55.133% 82.41%, 43.939% 83.071%, 33.229% 85.087%, 23.243% 88.122%, 14.217% 91.842%, 6.39% 95.913%, 0% 100%);
+    @include mq($md){
+      clip-path: none;
+    }
+  }
+  .service__clip__path{
+    clip-path: polygon(100% 0%, 100% 99.953%, 0% 99.953%, 0% 0%, 0% 0%, 11.01% 4.616%, 22.155% 7.785%, 33.299% 9.667%, 44.309% 10.418%, 55.049% 10.196%, 65.385% 9.158%, 75.183% 7.461%, 84.308% 5.265%, 92.625% 2.725%, 100% 0%);
+    @include mq($md){
+      clip-path: none;
+    }
+  }
+  .footer__clip__path{
+    clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%, 0% 0%, 11.311% 5.8%, 22.588% 9.759%, 33.732% 12.084%, 44.65% 12.981%, 55.244% 12.659%, 65.419% 11.323%, 75.078% 9.183%, 84.125% 6.444%, 92.464% 3.314%, 100% 0%);
+    @include mq($md){
+      clip-path: none;
+    }
+  }
+  // header stikcy
+  .header__function {
+    transition: var(--transition);
+    &.is__sticky {
+        position: fixed;
+        animation: stickyanimations 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        transition: padding 1s;
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.06);
+        background: var(--rts-white);
+        z-index: 999;
+        width: 100%;
+        top: 0;
+        padding: 0;
+
+        @include mq($md) {
+            padding: 15px 0;
+        }
+        &.is__home__3{
+          background-color: rgba(0, 0, 52, 0.9);
+          z-index: 1024;
+        }
+    }
+  }
+  .offcanvas, {
+    --bs-offcanvas-zindex: 1045;
+    --bs-offcanvas-width: 400px;
+    --bs-offcanvas-height: 30vh;
+    --bs-offcanvas-padding-x: 1rem;
+    --bs-offcanvas-padding-y: 1rem;
+    --bs-offcanvas-color: var(--bs-body-color);
+    --bs-offcanvas-bg: var(--bs-body-bg);
+    --bs-offcanvas-border-width: var(--bs-border-width);
+    --bs-offcanvas-border-color: var(--bs-border-color-translucent);
+    --bs-offcanvas-box-shadow: var(--bs-box-shadow-sm);
+    --bs-offcanvas-transition: transform 0.3s ease-in-out;
+    --bs-offcanvas-title-line-height: 1.5;
+  }
+  .offcanvas {
+    position: fixed;
+    bottom: 0;
+    z-index: 1045;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: #212529;
+    visibility: hidden;
+    left: 0;
+    background-color: #fff;
+    background-clip: padding-box;
+    outline: 0;
+    transform: translateX(-100%);
+    transition: var(--transition);
+}
+.offcanvas.visible{
+  transform: translateX(0);
+  left: 0;
+}
+.offcanvas {
+  @include mq($md) {
+    min-width: unset;
+    width: unset;
+
+  }
+}
+.offcanvas-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1040;
+	width: 100vw;
+	height: 100vh;
+	background-color: #000;
+}
+.offcanvas-backdrop.show {
+	opacity: .5 !important;
+  z-index: 1040 !important;
+}
+.offcanvas-backdrop.fade {
+  opacity: 0;
+  z-index: -1;
+}
+
+  @keyframes stickyanimations {
+    0% {
+        transform: translateY(-100px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+  }
+}
+
+@tailwind utilities;
+
+@import "default/animation";
+@import "default/variables";
+@import "default/loader";
+@import "default/typography";
+@import "default/input";
+
+@import "components/nav";
+@import "components/blog";
+@import "components/button";
+@import "components/swiper-nav";
+@import "components/slider_animation";
+@import "components/backtotop";

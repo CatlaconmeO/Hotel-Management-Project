@@ -1,0 +1,24 @@
+.swiper-slide-active {
+  .anim-1 {
+    animation-delay: 1.4s;
+    animation: fadeInUp 2s;
+  }
+  .anim-2 {
+    animation-delay: 1s;
+    animation: fadeInUp 2s;
+  }
+  .anim-3{
+     animation-delay: 1.2s;
+     animation: fadeInUp 2s;
+  }
+  .anim-4{
+     animation-delay: 1.4s;
+     animation: fadeInUp 2s;
+  }
+  .animate-content{
+    display: flex;
+    animation-delay: 1s;
+    animation: fadeInUp 2s;
+  }
+}
+
