@@ -2,25 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable; //
-use Illuminate\Notifications\Notifiable;
 
 class Customer extends Authenticatable implements \Illuminate\Contracts\Auth\MustVerifyEmail
 {
-    use HasFactory, Notifiable;
-
     protected $fillable = [
         'name',
         'email',
-        'email_verified_at',
         'password',
         'phone',
+        'date_of_birth',
         'address',
         'identity_number',
         'customer_type',
+        'team_id',
     ];
+
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
+    }
 
     public function bookings(): HasMany
     {

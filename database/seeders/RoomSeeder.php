@@ -2,9 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Room;
+use App\Models\Team;
+use App\Models\Branch;
+use App\Models\Amenity;
+use App\Models\RoomType;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RoomSeeder extends Seeder
 {
@@ -13,19 +17,28 @@ class RoomSeeder extends Seeder
      */
     public function run(): void
     {
-        $roomNumber = 101;
+        $team = Team::first() ?? Team::factory()->create();
 
-        foreach (range(1, 2) as $branchId) {
-            foreach (range(1, 4) as $roomTypeId) {
-                for ($i = 0; $i < 3; $i++) {
-                    Room::create([
-                        'branch_id' => $branchId,
-                        'room_type_id' => $roomTypeId,
-                        'room_number' => 'P' . $roomNumber++,
-                        'note' => 'Phòng sạch sẽ, đầy đủ tiện nghi.',
-                    ]);
-                }
-            }
+        $branches = Branch::all();
+        $roomTypes = RoomType::all();
+        $amenities = Amenity::all();
+
+        if ($branches->isEmpty() || $roomTypes->isEmpty()) {
+            $this->command->warn('Hãy seed Branch và RoomType trước khi seed Room.');
+            return;
+        }
+
+        // Tạo 20 phòng ngẫu nhiên
+        for ($i = 1; $i <= 20; $i++) {
+            Room::create([
+                'branch_id' => $branches->random()->id,
+                'room_type_id' => $roomTypes->random()->id,
+                'amenity_id' => $amenities->isNotEmpty() ? $amenities->random()->id : null,
+                'room_number' => 'R' . str_pad($i, 3, '0', STR_PAD_LEFT), // VD: R001, R002
+                'status' => collect(['available', 'booked', 'occupied', 'cleaning'])->random(),
+                'team_id' => $team->id,
+                'note' => fake()->sentence(6),
+            ]);
         }
     }
 }

@@ -5,6 +5,12 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\RoomSeeder;
+use Database\Seeders\TeamSeeder;
+use Database\Seeders\BranchSeeder;
+use Database\Seeders\AmenitySeeder;
+use Database\Seeders\VoucherSeeder;
+use Database\Seeders\RoomTypeSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,13 +19,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        $this->call([
-            HotelSeeder::class,
-            BranchSeeder::class,
-            RoomTypeSeeder::class,
-            RoomSeeder::class,
-        ]);
+        $this->call(BranchSeeder::class);
+        $this->call(AmenitySeeder::class);
+        $this->call(RoomTypeSeeder::class);
+        $this->call(RoomSeeder::class);
+        $this->call(VoucherSeeder::class);
     }
 }

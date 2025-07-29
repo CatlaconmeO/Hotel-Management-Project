@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Room;
+use App\Models\Team;
+use App\Models\Booking;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BookingDetail extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'booking_id',
         'room_id',
@@ -18,14 +17,21 @@ class BookingDetail extends Model
         'name',
         'email',
         'phone',
+        'team_id'
     ];
-    public function booking()
+
+    public function booking(): BelongsTo
     {
-        return $this->belongsTo(Booking::class, 'booking_id', 'id');
+        return $this->belongsTo(Booking::class);
     }
 
-    public function rooms()
+    public function room(): BelongsTo
     {
-        return $this->belongsTo(Room::class, 'room_id', 'id');
+        return $this->belongsTo(Room::class);
+    }
+
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
     }
 }

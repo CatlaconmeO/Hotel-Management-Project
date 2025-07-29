@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Team;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -15,12 +16,13 @@ return new class extends Migration
             $table->id();
             $table->string('name')->required();
             $table->string('email')->unique();
-            $table->string('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone')->required();
+            $table->timestamp('date_of_birth')->nullable();
             $table->string('address');
             $table->string('identity_number');
-            $table->enum('customer_type', ['regular', 'vip']);
+            $table->enum('customer_type', ['regular', 'vip'])->default('regular');
+            $table->foreignIdFor(Team::class)->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -25,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
             $hotels = Team::with('branches.rooms.roomType')->get();
             $view->with('hotels', $hotels);
         });
+        View::addNamespace('mail', resource_path('views/vendor/mail'));
     }
 }

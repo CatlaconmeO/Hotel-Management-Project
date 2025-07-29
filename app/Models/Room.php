@@ -2,25 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Team;
 use App\Enums\RoomStatusEnum;
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Room extends Model
 {
+
     protected $fillable = [
         'branch_id',
         'room_type_id',
         'room_number',
         'status',
-        'note',
+        'description',
+        'image',
+        'team_id',
     ];
-
-    public function updateStatus(RoomStatusEnum $status): bool
-    {
-        return $this->update(['status' => $status]);
-    }
 
     protected $casts = [
         'status' => RoomStatusEnum::class,
@@ -34,6 +33,16 @@ class Room extends Model
     public function roomType()
     {
         return $this->belongsTo(RoomType::class);
+    }
+
+    public function amenity()
+    {
+        return $this->belongsTo(Amenity::class);
+    }
+
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
     }
 
     public function bookings()

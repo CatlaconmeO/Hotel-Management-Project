@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\Team;
 use App\Models\Branch;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class BranchSeeder extends Seeder
 {
@@ -13,23 +14,25 @@ class BranchSeeder extends Seeder
      */
     public function run(): void
     {
+        // Lấy team đầu tiên (hoặc tạo mới nếu chưa có)
+        $team = Team::first() ?? Team::factory()->create();
+
         Branch::create([
-            'team_id' => 1,
             'name' => 'Chi nhánh Hà Nội',
-            'address' => 'Số 1 Tràng Tiền, Hà Nội',
-            'phone' => '0243 888 8888',
-            'email' => 'hanoi@moonlit.com',
-            'description' => 'Chi nhánh trung tâm thủ đô.',
+            'address' => '123 Đường Hoàn Kiếm, Hà Nội',
+            'phone' => '0123456789',
+            'email' => 'hanoi@hotel.com',
+            'description' => 'Chi nhánh chính đặt tại Hà Nội',
+            'team_id' => $team->id,
         ]);
 
         Branch::create([
-            'team_id' => 1,
             'name' => 'Chi nhánh TP.HCM',
-            'address' => '456 Lê Lợi, Quận 1, TP.HCM',
-            'phone' => '0283 777 7777',
-            'email' => 'hcm@moonlit.com',
-            'description' => 'Chi nhánh khu trung tâm Sài Gòn.',
+            'address' => '456 Đường Quận 1, TP.HCM',
+            'phone' => '0987654321',
+            'email' => 'hcm@hotel.com',
+            'description' => 'Chi nhánh đặt tại trung tâm TP.HCM',
+            'team_id' => $team->id,
         ]);
     }
-
 }
