@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use App\Models\Team;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,14 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branches', function (Blueprint $table) {
+        Schema::create('booking_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+            $table->foreignId('room_id')->constrained()->onDelete('cascade');
+            $table->integer('price');
             $table->string('name');
-            $table->string('address');
-            $table->string('phone')->nullable();
-            $table->string('email')->nullable();
-            $table->string('image')->nullable(); 
-            $table->text('description')->nullable();
+            $table->string('email');
+            $table->string('phone');
             $table->foreignIdFor(Team::class)->constrained()->onDelete('cascade');
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branches');
+        Schema::dropIfExists('booking_details');
     }
 };

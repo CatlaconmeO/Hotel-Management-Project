@@ -10,6 +10,10 @@ use App\Models\Team;
 use App\Enums\RoomStatusEnum;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\BookingConfirmationMail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -78,7 +82,7 @@ class BookingController extends Controller
                     'price' => $booking->total_price,
                 ]);
 
-                $room->updateStatus(RoomStatusEnum::Pending);
+                update($room->status = RoomStatusEnum::Booked);
 
                 return $booking;
             });
@@ -103,4 +107,64 @@ class BookingController extends Controller
         return view('livewire.pages.bookings.history', compact('bookings'));
     }
 
+    public function detail($id)
+    {
+        $bookingDetail = BookingDetail::with(['booking', 'rooms', 'booking.customer'])->findOrFail($id);
+
+        return view('livewire.pages.bookings.detail', compact('bookingDetail'));
+    }
+
+    public function cancel(Booking $booking)
+    {
+        if ($booking->status !== 'completed') {
+            return back()->with('error', 'Only confirmed bookings can be cancelled.');
+        }
+
+        $booking->update([
+            'status' => 'cancelled'
+        ]);
+
+        return back()->with('success', 'Booking has been cancelled successfully.');
+    }
+
+    public function checkIn(Booking $booking)
+    {
+        if ($booking->status !== 'completed') {
+            return back()->with('error', 'Only confirmed bookings can be checked in.');
+        }
+
+        $booking->update([
+            'status' => 'completed' //Sửa sau
+        ]);
+
+        return back()->with('success', 'Check-in successful.');
+    }
+    public function downloadInvoicePdf(Booking $booking)
+    {
+        $booking->load(['customer', 'branch.team', 'bookingDetail.rooms']);
+
+        $pdf = Pdf::loadView('livewire.pages.bookings.invoice-pdf', compact('booking'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('invoice-'.$booking->id.'.pdf');
+    }
+
+    public function sendConfirmation(Booking $booking)
+    {
+        try {
+            $booking->load(['customer', 'branch.team', 'bookingDetail.rooms.roomType']);
+
+            if (!$booking->customer?->email) {
+                return back()->with('error', 'Customer email not found.');
+            }
+
+            Mail::to($booking->customer->email)
+                ->send(new BookingConfirmationMail($booking));
+
+            return back()->with('success', 'Confirmation email sent successfully.');
+        } catch (\Exception $e) {
+            Log::error('Booking confirmation email failed: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send confirmation email.');
+        }
+    }
 }

@@ -116,7 +116,7 @@ class PaymentController extends Controller
                 ]);
 
                 if ($booking->bookingDetail && $booking->bookingDetail->room) {
-                    $booking->bookingDetail->room->updateStatus(RoomStatusEnum::Booked);
+                    $booking->bookingDetail->room->status = RoomStatusEnum::Booked;
                 }
 
                 DB::commit();

@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\User;
+use App\Models\Team;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -15,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('room_type_id')->constrained()->cascadeOnDelete();
-            $table->string('room_number'); // Ví dụ: 101, A1
-            $table->enum('status', ['available', 'booked', 'pending', 'cleaning'])->default('available');
-            $table->text('note')->nullable();
+            $table->string('room_number'); 
+            $table->text('description')->nullable();
+            $table->enum('status', ['available', 'booked', 'occupied', 'cleaning'])->default('available');
+            $table->string('image')->nullable(); 
+            $table->foreignIdFor(Team::class)->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
