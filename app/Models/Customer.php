@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable; //
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class Customer extends Authenticatable implements \Illuminate\Contracts\Auth\MustVerifyEmail
+class Customer extends Authenticatable implements MustVerifyEmail
 {
+    use HasFactory, Notifiable;
+
     protected $fillable = [
         'name',
         'email',
@@ -18,6 +23,7 @@ class Customer extends Authenticatable implements \Illuminate\Contracts\Auth\Mus
         'identity_number',
         'customer_type',
         'team_id',
+        'email_verified_at',
     ];
 
     public function team(): BelongsTo

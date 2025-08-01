@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingStatusEnum;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Booking;
@@ -70,20 +71,20 @@ class BookingController extends Controller
                     'check_in_date' => $data['check_in_date'],
                     'check_out_date' => $data['check_out_date'],
                     'status' => 'pending',
-                    'total_price' => $totalPrice,
+                    'team_id' => 1,
                 ]);
 
-                BookingDetail::create([
+                $bookingDetail = BookingDetail::create([
                     'booking_id' => $booking->id,
                     'room_id' => $room->id,
                     'name' => $data['name'],
                     'email' => $data['email'],
                     'phone' => $data['phone'],
-                    'price' => $booking->total_price,
+                    'price' => $totalPrice,
+                    'team_id' => '1',
                 ]);
 
-                update($room->status = RoomStatusEnum::Booked);
-
+                $room->update(['status' => RoomStatusEnum::Booked]);
                 return $booking;
             });
 
@@ -109,19 +110,19 @@ class BookingController extends Controller
 
     public function detail($id)
     {
-        $bookingDetail = BookingDetail::with(['booking', 'rooms', 'booking.customer'])->findOrFail($id);
+        $bookingDetail = BookingDetail::with(['booking', 'room', 'booking.customer'])->findOrFail($id);
 
         return view('livewire.pages.bookings.detail', compact('bookingDetail'));
     }
 
     public function cancel(Booking $booking)
     {
-        if ($booking->status !== 'completed') {
-            return back()->with('error', 'Only confirmed bookings can be cancelled.');
-        }
+    //        if ($booking->status->value === 'confirmed') {
+    //            return back()->with('error', 'Only confirmed bookings can be cancelled.');
+    //        }
 
         $booking->update([
-            'status' => 'cancelled'
+            'status' => BookingStatusEnum::Cancelled
         ]);
 
         return back()->with('success', 'Booking has been cancelled successfully.');
@@ -129,19 +130,19 @@ class BookingController extends Controller
 
     public function checkIn(Booking $booking)
     {
-        if ($booking->status !== 'completed') {
-            return back()->with('error', 'Only confirmed bookings can be checked in.');
+        if ($booking->status->value != 'confirmed') {
+            return back();
         }
 
         $booking->update([
-            'status' => 'completed' //Sửa sau
+            'status' => BookingStatusEnum::Confirmed
         ]);
 
         return back()->with('success', 'Check-in successful.');
     }
     public function downloadInvoicePdf(Booking $booking)
     {
-        $booking->load(['customer', 'branch.team', 'bookingDetail.rooms']);
+        $booking->load(['customer', 'branch.team', 'bookingDetail.room']);
 
         $pdf = Pdf::loadView('livewire.pages.bookings.invoice-pdf', compact('booking'))
             ->setPaper('a4', 'portrait');
@@ -152,7 +153,7 @@ class BookingController extends Controller
     public function sendConfirmation(Booking $booking)
     {
         try {
-            $booking->load(['customer', 'branch.team', 'bookingDetail.rooms.roomType']);
+            $booking->load(['customer', 'branch.team', 'bookingDetail.room.roomType']);
 
             if (!$booking->customer?->email) {
                 return back()->with('error', 'Customer email not found.');

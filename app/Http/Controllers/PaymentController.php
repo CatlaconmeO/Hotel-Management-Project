@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingStatusEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\RoomStatusEnum;
 use App\Services\VnpayService;
 use App\Models\Room;
@@ -35,7 +37,7 @@ class PaymentController extends Controller
         // Kiểm tra quyền truy cập và trạng thái
         abort_if(
             $booking->customer_id !== auth()->id() ||
-            $booking->status !== 'pending',
+            $booking->status !==  BookingStatusEnum::Pending,
             403
         );
 
@@ -48,7 +50,7 @@ class PaymentController extends Controller
         DB::transaction(function() use ($booking, &$payment) {
             $payment = Payment::create([
                 'booking_id' => $booking->id,
-                'amount' => $booking->total_price*1000,
+                'amount' => $booking->bookingDetail->price,
                 'payment_method' => 'vnpay',
                 'status' => 'pending',
                 'response_data' => null
@@ -104,16 +106,16 @@ class PaymentController extends Controller
             if ($vnpayData['vnp_ResponseCode'] === '00' && $vnpayData['vnp_TransactionStatus'] === '00') {
                 // Cập nhật payment
                 $payment->update([
-                    'status' => 'completed',
+                    'status' => PaymentStatusEnum::Completed,
                     'payment_method' => 'vnpay',
                     'paid_amount' => $vnpayData['vnp_Amount'] / 100, // VNPay amount được nhân 100
                     'response_data' => json_encode($vnpayData)
                 ]);
 
-                // Cập nhật booking
-                $booking->update([
-                    'status' => 'completed'
-                ]);
+//                Cập nhật booking
+//                $booking->update([
+//                    'status' => 'completed'
+//                ]);
 
                 if ($booking->bookingDetail && $booking->bookingDetail->room) {
                     $booking->bookingDetail->room->status = RoomStatusEnum::Booked;
