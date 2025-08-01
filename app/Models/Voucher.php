@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Team;
 use App\Enums\VoucherStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\VoucherTypeEnum;
 
 class Voucher extends Model
 {
@@ -23,8 +24,8 @@ class Voucher extends Model
     protected $casts = [
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
-        'status' => VoucherStatusEnum::class, 
-        'type' => VoucherAmountEnum::class,
+        'status' => VoucherStatusEnum::class,
+        'type' => VoucherTypeEnum::class,
     ];
 
     public function isValid(): bool

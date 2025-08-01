@@ -80,7 +80,6 @@
                         <form action="{{ route('bookings.store', $room) }}" method="POST" x-data="bookingComponent()">
                             @csrf
                             <input type="hidden" name="room_id" value="{{ $room->id }}">
-                            <input type="hidden" name="total_amount" :value="totalAmount">
 
                             <div class="grid gap-[30px]">
                                 {{-- Name --}}

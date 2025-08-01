@@ -17,8 +17,8 @@ class TeamFactory extends Factory
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
             'description' => $this->faker->paragraph(2),
-            'logo' => null,
-            'user_id' => null, // You might want to create or reference a user here
+            'image' => $this->faker->imageUrl(640, 480, 'business', true, 'Team'),
+            'user_id' => 1, // You might want to create or reference a user here
             'status' => 'active',
         ];
     }

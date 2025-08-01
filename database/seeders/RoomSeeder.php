@@ -33,11 +33,10 @@ class RoomSeeder extends Seeder
             Room::create([
                 'branch_id' => $branches->random()->id,
                 'room_type_id' => $roomTypes->random()->id,
-                'amenity_id' => $amenities->isNotEmpty() ? $amenities->random()->id : null,
                 'room_number' => 'R' . str_pad($i, 3, '0', STR_PAD_LEFT), // VD: R001, R002
                 'status' => collect(['available', 'booked', 'occupied', 'cleaning'])->random(),
                 'team_id' => $team->id,
-                'note' => fake()->sentence(6),
+                'description' => fake()->sentence(6),
             ]);
         }
     }

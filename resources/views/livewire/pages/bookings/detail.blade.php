@@ -1,17 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    @if (session('success'))
-        <div class="bg-green-100 text-green-800 px-4 py-3 rounded mb-6">
-            <strong>Success!</strong> {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="bg-red-100 text-red-800 px-4 py-3 rounded mb-6">
-            <strong>Error!</strong> {{ session('error') }}
-        </div>
-    @endif
 
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
@@ -34,7 +23,7 @@
                     <div class="mt-4 md:mt-0">
                     <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-white text-[#1B4965]">
                         <x-heroicon-o-check-circle class="w-4 h-4 mr-2" />
-                        {{ ucfirst($bookingDetail->booking->status) }}
+                        {{ ucfirst($bookingDetail->booking->status->value) }}
                     </span>
                     </div>
                 </div>
@@ -89,9 +78,9 @@
                         <h3 class="text-xl font-semibold">Payment Information</h3>
                     </div>
                     <div class="space-y-2 pl-8">
-                        <p><strong>Total:</strong> ${{ number_format($bookingDetail->booking->total_price, 2) }}</p>
+                        <p><strong>Total:</strong> ${{ number_format($bookingDetail->price) }}</p>
                         <p><strong>Payment:</strong> {{ strtoupper($bookingDetail->booking->payment->payment_method ?? 'Unknown') }}</p>
-                        <p><strong>Status:</strong> <span class="text-green-600">{{ ucfirst($bookingDetail->booking->payment->status ?? 'Unpaid') }}</span></p>
+                        <p><strong>Status:</strong> <span class="text-green-600">{{ ucfirst($bookingDetail->booking->payment->status->value ?? 'Unpaid') }}</span></p>
                     </div>
                 </div>
             </div>
@@ -100,16 +89,7 @@
             <div class="border-t border-gray-200 p-6 bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="flex gap-2">
                     <!-- Cancel -->
-                    <form method="POST" action="{{ route('bookings.cancel', $bookingDetail->booking->id) }}"
-                          onsubmit="return confirm('Are you sure you want to cancel this booking?');">
-                        @csrf @method('DELETE')
-                        <button type="submit"
-                                class="flex items-center px-4 py-2 rounded border border-red-300 text-red-600 hover:bg-red-50 transition">
-                            <x-heroicon-o-x-circle class="w-5 h-5 mr-2" />
-                            Cancel Booking
-                        </button>
-                    </form>
-                    @if ($bookingDetail->booking->status !== 'completed' && $bookingDetail->booking->status !== 'cancelled')
+                    @if ($bookingDetail->booking->status->value !== 'cancelled')
                         <form action="{{ route('bookings.cancel', $bookingDetail->booking->id) }}" method="POST"
                               onsubmit="return confirm('Are you sure you want to cancel this booking?');">
                             @csrf
