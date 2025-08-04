@@ -36,7 +36,7 @@
                             <td class="px-4 py-3">{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d/m/Y') }}</td>
                             <td class="px-4 py-3">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold {{ $booking->status == 'confirmed' ? 'bg-green-100 text-green-700' : ($booking->status == 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-800') }}">
-                  {{ ucfirst($booking->status) }}
+                  {{ ucfirst($booking->status->value) }}
                 </span>
                             </td>
                             <td class="px-4 py-3 text-center">

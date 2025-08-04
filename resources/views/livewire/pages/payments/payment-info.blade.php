@@ -1,4 +1,4 @@
-{{-- resources/views/payments/info.blade.php --}}
+    {{-- resources/views/payments/info.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -18,7 +18,7 @@
               {{ $booking->status === 'paid'    ? 'bg-green-100 text-green-800'  : '' }}
               {{ $booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800': '' }}
               {{ $booking->status === 'failed'  ? 'bg-red-100 text-red-800'      : '' }}">
-              {{ ucfirst($booking->status) }}
+              {{ ucfirst($booking->status->value) }}
             </span>
                     </div>
 
@@ -54,7 +54,7 @@
                         <div class="flex justify-between items-center">
                             <span class="text-lg font-medium text-heading">Total Amount</span>
                             <span class="text-3xl font-bold text-primary">
-                {{ number_format($booking->total_price * 1000, 0, ',', '.') }} ₫
+                {{ number_format($booking->bookingDetail->price, 0, ',', '.') }} ₫
               </span>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
 
             {{-- Actions --}}
             <div class="space-y-[20px]">
-                @if($booking->status === 'pending')
+                @if($booking->status === App\Enums\BookingStatusEnum::Pending)
                     <form action="{{ route('payments.process', $booking) }}" method="POST" class="w-full">
                         @csrf
                         <button
@@ -76,7 +76,7 @@
                     </form>
                 @else
                     <a
-                        href="{{ route('home') }}"
+                        href="{{ route('dashboard') }}"
                         class="w-full block text-center px-6 py-3 bg-heading text-white rounded-[6px] font-medium hover:bg-gray-800 transition"
                     >
                         <i class="fas fa-home mr-2"></i>

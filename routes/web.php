@@ -51,15 +51,14 @@ Route::middleware(['auth'])->group(function () {
         ->name('booking.detail');
     Route::get('/bookings/history/detail/{booking}/invoice/pdf', [BookingController::class, 'downloadInvoicePdf'])
         ->name('bookings.invoice.pdf');
+    Route::get('/bookings/history/detail/{booking}/send-confirmation', [BookingController::class, 'sendConfirmation'])
+        ->name('bookings.sendConfirmation');
 });
 
-Route::get('/bookings/history/detail/{booking}/send-confirmation', [BookingController::class, 'sendConfirmation'])
-    ->name('bookings.sendConfirmation');
-
+Route::match(['get', 'post'], '/payments/{booking}/process', [PaymentController::class, 'processPayment'])
+    ->name('payments.process');
 
 Route::middleware(['auth'])->group(function () {
-    Route::match(['get', 'post'], '/payments/{booking}/process', [PaymentController::class, 'processPayment'])
-        ->name('payments.process');
     Route::get('payment/vnpay/return', [PaymentController::class, 'handleReturn'])->name('vnpay.return');
     Route::get('/payment/success/', [PaymentController::class, 'success'])
         ->name('payment.success');
