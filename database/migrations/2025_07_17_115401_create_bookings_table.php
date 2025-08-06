@@ -19,6 +19,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Customer::class);
             $table->foreignIdFor(Branch::class);
+            $table->foreignId('voucher_id')->nullable()->constrained()->onDelete('set null');
+            $table->integer('discount_amount')->default(0);
             $table->date('check_in_date');
             $table->date('check_out_date');
             $table->enum('status', ['pending', 'confirmed', 'cancelled', 'refunded'])->default('pending');
@@ -34,4 +36,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('bookings');
     }
-}; 
+};

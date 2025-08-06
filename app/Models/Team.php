@@ -93,4 +93,8 @@ class Team extends Model
         return $this->hasMany(\App\Models\Payment::class);
     }
 
+    public function reviews() {
+        return $this->hasMany(Review::class);
+    }
+
 }

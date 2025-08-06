@@ -40,6 +40,27 @@
         <div class="progress-bar"></div>
     </div>
 @endif
+@if (session('error'))
+    <div
+        id="flash-notification-error"
+        class="fixed top-6 right-6 z-50 w-full max-w-sm bg-red-500 text-white rounded-lg shadow-xl overflow-hidden notification"
+        style="animation: slideIn 0.3s ease-out forwards;"
+    >
+        <div class="p-4 flex items-start">
+            <div class="flex-shrink-0">
+                <x-heroicon-o-x-circle class="w-5 h-5 text-white" />
+            </div>
+            <div class="ml-3 flex-1 pt-0.5">
+                <p class="text-sm font-medium">{{ session('error') }}</p>
+            </div>
+            <button onclick="dismissFlashError()" class="ml-4 text-white hover:text-red-200 focus:outline-none">
+                <x-heroicon-o-x-mark class="w-5 h-5" />
+            </button>
+        </div>
+        <div class="progress-bar-error"></div>
+    </div>
+@endif
+
 
 {{-- Nội dung trang --}}
 <main>
@@ -84,7 +105,22 @@
         from { width: 100%; }
         to { width: 0%; }
     }
-</style>
+    .progress-bar-error {
+        height: 3px;
+        background: rgba(255, 255, 255, 0.2);
+        position: relative;
+    }
+    .progress-bar-error::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: white;
+        animation: progress 5s linear forwards;
+    }
+    </style>
 <script>
     function dismissFlash() {
         const alert = document.getElementById('flash-notification');
@@ -96,10 +132,31 @@
         }
     }
     window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            dismissFlash();
-        }, 5000);
+        // Handle success notification
+        const successAlert = document.getElementById('flash-notification');
+        if (successAlert) {
+            setTimeout(() => {
+                dismissFlash();
+            }, 5000);
+        }
+
+        // Handle error notification
+        const errorAlert = document.getElementById('flash-notification-error');
+        if (errorAlert) {
+            setTimeout(() => {
+                dismissFlashError();
+            }, 5000);
+        }
     });
+    function dismissFlashError() {
+        const alert = document.getElementById('flash-notification-error');
+        if (alert) {
+            alert.classList.add('fade-out');
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 300);
+        }
+    }
 </script>
 
 {{-- Scripts --}}

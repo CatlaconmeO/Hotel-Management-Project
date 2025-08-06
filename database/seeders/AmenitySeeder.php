@@ -2,35 +2,46 @@
 
 namespace Database\Seeders;
 
-use App\Models\Team;
 use App\Models\Amenity;
+use App\Models\Team;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class AmenitySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $team = Team::first() ?? Team::factory()->create();
+        $team = Team::first();
+
+        if (!$team) {
+            $this->command->error('No teams found. Please create a team first.');
+            return;
+        }
 
         $amenities = [
-            ['name' => 'Wi-Fi miễn phí', 'icon' => 'heroicon-o-wifi', 'description' => 'Kết nối internet tốc độ cao miễn phí.'],
-            ['name' => 'Máy lạnh', 'icon' => 'heroicon-o-sparkles', 'description' => 'Phòng được trang bị máy điều hòa nhiệt độ.'],
-            ['name' => 'Bể bơi', 'icon' => 'heroicon-o-droplet', 'description' => 'Hồ bơi ngoài trời sạch sẽ và hiện đại.'],
-            ['name' => 'Phòng Gym', 'icon' => 'heroicon-o-bolt', 'description' => 'Phòng tập thể dục với đầy đủ thiết bị.'],
-            ['name' => 'Đỗ xe miễn phí', 'icon' => 'heroicon-o-truck', 'description' => 'Chỗ đỗ xe rộng rãi, miễn phí cho khách.'],
-            ['name' => 'Dịch vụ giặt là', 'icon' => 'heroicon-o-swatch', 'description' => 'Giặt ủi nhanh chóng và tiện lợi.'],
-            ['name' => 'Lễ tân 24/7', 'icon' => 'heroicon-o-clock', 'description' => 'Lễ tân luôn sẵn sàng phục vụ mọi lúc.'],
-            ['name' => 'Nhà hàng', 'icon' => 'heroicon-o-fire', 'description' => 'Nhà hàng với thực đơn phong phú và ngon miệng.'],
-            ['name' => 'Quầy bar', 'icon' => 'heroicon-o-cocktail', 'description' => 'Quầy bar phục vụ đồ uống đa dạng.'],
-            ['name' => 'Dịch vụ spa', 'icon' => 'heroicon-o-heart', 'description' => 'Spa thư giãn với liệu pháp chuyên nghiệp.'],
+            ['name' => 'Wi-Fi', 'icon' => 'wifi.png', 'description' => 'Free wireless internet'],
+            ['name' => 'Air Conditioning', 'icon' => 'ac.png', 'description' => 'Climate control'],
+            ['name' => 'TV', 'icon' => 'tv.png', 'description' => 'Flat screen television'],
+            ['name' => 'Mini Bar', 'icon' => 'minibar.png', 'description' => 'Refrigerated mini bar'],
+            ['name' => 'Safe', 'icon' => 'safe.png', 'description' => 'In-room safety deposit box'],
+            ['name' => 'Balcony', 'icon' => 'balcony.png', 'description' => 'Private balcony'],
+            ['name' => 'Jacuzzi', 'icon' => 'jacuzzi.png', 'description' => 'Private jacuzzi'],
+            ['name' => 'Room Service', 'icon' => 'room-service.png', 'description' => '24/7 room service'],
+            ['name' => 'Breakfast', 'icon' => 'breakfast.png', 'description' => 'Complimentary breakfast'],
+            ['name' => 'Parking', 'icon' => 'parking.png', 'description' => 'Free parking'],
+            ['name' => 'Gym Access', 'icon' => 'gym.png', 'description' => 'Fitness center access'],
+            ['name' => 'Pool Access', 'icon' => 'pool.png', 'description' => 'Swimming pool access'],
         ];
 
         foreach ($amenities as $amenity) {
-            Amenity::create(array_merge($amenity, ['team_id' => $team->id]));
+            Amenity::firstOrCreate(
+                ['name' => $amenity['name'], 'team_id' => $team->id],
+                [
+                    'icon' => $amenity['icon'],
+                    'description' => $amenity['description'],
+                ]
+            );
         }
+
+        $this->command->info('Amenities seeded successfully!');
     }
 }

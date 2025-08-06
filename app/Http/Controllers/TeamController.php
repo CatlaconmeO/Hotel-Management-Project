@@ -10,19 +10,21 @@ class TeamController extends Controller
 {
     public function index(Request $request)
     {
-        $search = trim($request->input('search'));
+        $search = $request->input('search');
+        $query  = Team::query();
 
-        $hotels = Team::query()
-            ->when($search, fn($query) =>
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'ILIKE', "%{$search}%")
-                    ->orWhere('email', 'ILIKE', "%{$search}%")
-                    ->orWhere('address', 'ILIKE', "%{$search}%");
-                })
-            )
-            ->latest()
-            ->paginate(9)
-            ->withQueryString();
+        if ($search = $request->input('search')) {
+            $searchTerm = '%' . $search . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'ILIKE', $searchTerm)
+                    ->orWhere('email', 'ILIKE', $searchTerm)
+                    ->orWhere('address', 'ILIKE', $searchTerm);
+            });
+            $results = $query->get();
+        }
+
+        $hotels = $query->latest()->paginate(9)->withQueryString();
+        //dd($query->toSql(), $search, $searchTerm,   $query->getBindings(), $results);
         return view('livewire.pages.hotels.index', compact('hotels', 'search'));
     }
 

@@ -5,12 +5,12 @@ namespace App\Models;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class RoomType extends Model
 {
 
     protected $fillable = [
-        'amenity_id',
         'name',
         'description',
         'price',
@@ -28,6 +28,12 @@ class RoomType extends Model
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
+    }
+
+    public function amenities(): belongsToMany
+    {
+        return $this->belongsToMany(Amenity::class, 'room_type_amenity')
+            ->withTimestamps();
     }
 
 }

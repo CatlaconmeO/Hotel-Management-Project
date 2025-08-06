@@ -32,7 +32,7 @@
 <div class="section">
     <p><span class="label">Hotel:</span> {{ $booking->branch->team->name }}</p>
     <p><span class="label">Branch:</span> {{ $booking->branch->name }}</p>
-    <p><span class="label">Room:</span> {{ $booking->rooms->roomType->name ?? 'N/A' }} ({{ $booking->bookingDetail->room->room_number ?? '' }})</p>
+    <p><span class="label">Room:</span> {{ $booking->room->roomType->name ?? 'N/A' }} ({{ $booking->bookingDetail->room->room_number ?? '' }})</p>
     <p><span class="label">Check-in:</span> {{ \Carbon\Carbon::parse($booking->check_in_date)->format('d/m/Y') }}</p>
     <p><span class="label">Check-out:</span> {{ \Carbon\Carbon::parse($booking->check_out_date)->format('d/m/Y') }}</p>
     <p><span class="label">Nights:</span> {{ \Carbon\Carbon::parse($booking->check_in_date)->diffInDays($booking->check_out_date) }}</p>
@@ -41,7 +41,7 @@
 <div class="border"></div>
 
 <div class="total">
-    Total: ${{ number_format($booking->total_price, 2) }}
+    Total: ${{ number_format($booking->bookingDetail->price) }}
 </div>
 </body>
 </html>

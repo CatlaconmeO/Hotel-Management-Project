@@ -6,6 +6,7 @@ use App\Models\Team;
 use App\Enums\VoucherStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\VoucherTypeEnum;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Voucher extends Model
 {
@@ -42,4 +43,11 @@ class Voucher extends Model
     {
         return $this->belongsTo(Team::class);
     }
+
+    public function customers(): BelongsToMany
+    {
+        return $this->belongsToMany(Customer::class, 'customer_voucher')
+            ->withTimestamps();
+    }
+
 }

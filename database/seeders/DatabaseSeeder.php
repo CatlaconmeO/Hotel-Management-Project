@@ -3,14 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Seeders\RoomSeeder;
-use Database\Seeders\TeamSeeder;
 use Database\Seeders\BranchSeeder;
 use Database\Seeders\AmenitySeeder;
 use Database\Seeders\VoucherSeeder;
 use Database\Seeders\RoomTypeSeeder;
+use Database\Seeders\RoomTypeAmenitySeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RoomTypeSeeder::class);
         $this->call(RoomSeeder::class);
         $this->call(VoucherSeeder::class);
+        $this->call(RoomTypeAmenitySeeder::class);
     }
 }
