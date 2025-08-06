@@ -47,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('bookings.cancel');
     Route::post('/bookings/{booking}/checkin', [BookingController::class, 'checkIn'])
         ->name('bookings.checkin');
+    Route::post('/bookings/{booking}/checkout', [BookingController::class, 'checkOut'])
+        ->name('bookings.checkout');
     Route::get('/bookings/history/detail/{booking}', [BookingController::class, 'detail'])
         ->name('booking.detail');
     Route::get('/bookings/history/detail/{booking}/invoice/pdf', [BookingController::class, 'downloadInvoicePdf'])
@@ -64,6 +66,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('payment.success');
     Route::get('/payment/failed/', [PaymentController::class, 'failed'])
         ->name('payment.failed');
+    Route::post('/payments/{booking}/apply-voucher', [PaymentController::class, 'applyVoucher'])
+        ->name('payments.apply-voucher');
+    Route::delete('/payments/{booking}/remove-voucher', [PaymentController::class, 'removeVoucher'])
+        ->name('payments.remove-voucher');
 });
 
 Route::post('/upload', [UploadController::class, 'upload']);

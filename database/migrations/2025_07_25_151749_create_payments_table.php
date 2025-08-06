@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Team;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +19,7 @@ return new class extends Migration
             $table->string('payment_method')->default('vnpay');
             $table->string('status');
             $table->text('response_data')->nullable();
+            $table->foreignIdFor(Team::class)->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

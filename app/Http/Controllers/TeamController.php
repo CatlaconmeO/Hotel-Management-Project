@@ -21,10 +21,10 @@ class TeamController extends Controller
                     ->orWhere('address', 'ILIKE', $searchTerm);
             });
             $results = $query->get();
-            //dd($query->toSql(), $search, $searchTerm,   $query->getBindings(), $results);
         }
 
         $hotels = $query->latest()->paginate(9)->withQueryString();
+        //dd($query->toSql(), $search, $searchTerm,   $query->getBindings(), $results);
         return view('livewire.pages.hotels.index', compact('hotels', 'search'));
     }
 

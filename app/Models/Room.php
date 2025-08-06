@@ -35,10 +35,6 @@ class Room extends Model
         return $this->belongsTo(RoomType::class);
     }
 
-    public function amenity()
-    {
-        return $this->belongsTo(Amenity::class);
-    }
 
     public function team(): BelongsTo
     {
@@ -55,6 +51,14 @@ class Room extends Model
             'id',
             'booking_id'
         );
+    }
+
+    public function reviews() {
+        return $this->hasMany(Review::class);
+    }
+
+    public function averageRating() {
+        return $this->reviews()->avg('rating');
     }
 
     public function isAvailable(string $checkIn, string $checkOut): bool

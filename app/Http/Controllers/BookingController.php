@@ -71,7 +71,7 @@ class BookingController extends Controller
                     'check_in_date' => $data['check_in_date'],
                     'check_out_date' => $data['check_out_date'],
                     'status' => 'pending',
-                    'team_id' => 1,
+                    'team_id' => $room->branch->team->id,
                 ]);
 
                 $bookingDetail = BookingDetail::create([
@@ -81,17 +81,19 @@ class BookingController extends Controller
                     'email' => $data['email'],
                     'phone' => $data['phone'],
                     'price' => $totalPrice,
-                    'team_id' => '1',
+                    'team_id' => $room->branch->team->id,
                 ]);
 
                 $room->update(['status' => RoomStatusEnum::Booked]);
+                $booking->customer->update([
+                    'team_id' => $room->branch->team->id,
+                ]);
                 return $booking;
             });
 
             return redirect()->route('payments.process', compact('booking', 'totalPrice', 'nights'));
 
         } catch (\Throwable $e) {
-            \Log::error($e);
             return back()
                 ->withInput()
                 ->withErrors(['general' => 'Error. Try again later.']);
@@ -117,9 +119,9 @@ class BookingController extends Controller
 
     public function cancel(Booking $booking)
     {
-    //        if ($booking->status->value === 'confirmed') {
-    //            return back()->with('error', 'Only confirmed bookings can be cancelled.');
-    //        }
+        //        if ($booking->status->value === 'confirmed') {
+        //            return back()->with('error', 'Only confirmed bookings can be cancelled.');
+        //        }
 
         $booking->update([
             'status' => BookingStatusEnum::Cancelled
@@ -131,15 +133,29 @@ class BookingController extends Controller
     public function checkIn(Booking $booking)
     {
         if ($booking->status->value != 'confirmed') {
-            return back();
+            return back()->with('error', 'Your booking have not confirmed yet.');;
         }
 
-        $booking->update([
-            'status' => BookingStatusEnum::Confirmed
+        $booking->bookingDetail->room->update([
+            'status' => RoomStatusEnum::Occupied
         ]);
 
         return back()->with('success', 'Check-in successful.');
     }
+
+    public function checkOut(Booking $booking)
+    {
+        if ($booking->bookingDetail->room->status->value != 'occupied') {
+            return back()->with('error', 'You have not check-in yet.');
+        }
+
+        $booking->bookingDetail->room->update([
+            'status' => RoomStatusEnum::Maintenance
+        ]);
+
+        return back()->with('success', 'Check-out successful.');
+    }
+
     public function downloadInvoicePdf(Booking $booking)
     {
         $booking->load(['customer', 'branch.team', 'bookingDetail.room']);

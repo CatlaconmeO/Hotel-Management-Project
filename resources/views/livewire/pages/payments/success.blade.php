@@ -12,10 +12,14 @@
                     <p class="text-gray-600">
                         {{ $message }}
                     </p>
-                    <div class="mt-6">
+                    <div class="mt-6 space-y-3">
                         <a href="{{ route('dashboard') }}"
-                           class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                            Trở về trang chủ
+                           class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Back to homepage
+                        </a>
+                        <a href="{{ route('bookings.history') }}"
+                           class="w-full flex justify-center py-2 px-4 border border-blue-300 rounded-md shadow-sm text-sm font-medium text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Go to my booking history
                         </a>
                     </div>
                 </div>

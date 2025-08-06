@@ -21,10 +21,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('*', function ($view) {
-            $hotels = Team::with('branches.rooms.roomType')->get();
-            $view->with('hotels', $hotels);
-        });
-        View::addNamespace('mail', resource_path('views/vendor/mail'));
     }
 }

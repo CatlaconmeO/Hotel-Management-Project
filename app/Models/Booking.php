@@ -2,10 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Room;
-use App\Models\Team;
-use App\Models\Branch;
-use App\Models\Customer;
 use App\Enums\BookingStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +16,8 @@ class Booking extends Model
         'check_out_date',
         'status',
         'team_id',
+        'voucher_id',
+        'discount_amount',
     ];
 
     protected $casts = [
@@ -63,11 +61,27 @@ class Booking extends Model
 
     public function bookingDetail()
     {
-        return $this->hasOne(BookingDetail::class, 'booking_id', 'id');
+        return $this->hasOne(BookingDetail::class);
     }
 
     public function payment()
     {
-        return $this->hasOne(Payment::class, 'booking_id', 'id');
+        return $this->hasOne(Payment::class);
     }
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
+    }
+
+    public function hasVoucher(): bool
+    {
+        return !is_null($this->voucher_id);
+    }
+
+    public function canRemoveVoucher(): bool
+    {
+        return $this->hasVoucher() && $this->status === BookingStatusEnum::Pending;
+    }
+
 }
