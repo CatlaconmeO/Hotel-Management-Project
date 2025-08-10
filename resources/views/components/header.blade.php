@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4">
         <div class="grid lg:grid-cols-3 grid-cols-2 items-center py-5">
             {{-- Left: Navigation --}}
-            <div class="main__left flex justify-center gap-8 items-center">
+            <div class="main__left flex justify-center gap-14 items-center">
                 <a href="{{ route('dashboard') }}" class="nav-btn">
                     Home
                 </a>
@@ -23,7 +23,7 @@
             </div>
 
             {{-- Right: Auth & My Cart --}}
-            <div class="main__right flex justify-center gap-8 items-center">
+            <div class="main__right flex justify-center gap-14 items-center">
                 @auth
                     {{-- My Profile --}}
                     <a href="{{ route('profile') }}" class="nav-btn">
@@ -47,8 +47,8 @@
                     </a>
                 @endauth
 
-                {{-- My Cart --}}
-                <a class="cart-btn" href="/room-details-1">
+{{--                 My Cart --}}
+                <a href="{{ route('carts.index') }}" class="cart-btn">
                     <i class="fas fa-shopping-cart mr-2"></i>
                     <span>My Cart</span>
                 </a>

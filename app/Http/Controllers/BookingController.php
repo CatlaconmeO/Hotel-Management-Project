@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Booking;
 use App\Models\BookingDetail;
-use App\Models\Team;
 use App\Enums\RoomStatusEnum;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -18,26 +17,6 @@ use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
-    public function show(Request $request, Team $hotel)
-    {
-        $branchId = $request->get('branch', optional($hotel->branches->first())->id);
-        $currentBranch = $hotel->branches->firstWhere('id', $branchId);
-
-        $roomsQuery = Room::with('roomType')
-            ->when($currentBranch, fn($q) => $q->where('branch_id', $currentBranch->id));
-
-        $rooms = $roomsQuery
-            ->paginate(6)
-            ->appends($request->only(['branch', 'search', 'sort']));
-
-        return view('hotels.show', compact(
-            'hotel',
-            'currentBranch',
-            'rooms',
-            'branchId'
-        ));
-    }
-
     public function store(Request $request, Room $room)
     {
         $data = $request->validate([
@@ -119,9 +98,9 @@ class BookingController extends Controller
 
     public function cancel(Booking $booking)
     {
-        //        if ($booking->status->value === 'confirmed') {
-        //            return back()->with('error', 'Only confirmed bookings can be cancelled.');
-        //        }
+        if ($booking->status->value === 'confirmed') {
+            return back()->with('error', 'Confirmed bookings cannot be cancelled.');
+        }
 
         $booking->update([
             'status' => BookingStatusEnum::Cancelled

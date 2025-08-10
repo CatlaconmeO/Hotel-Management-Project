@@ -29,4 +29,5 @@ class Review extends Model
     public function team() {
         return $this->belongsTo(Team::class);
     }
+
 }

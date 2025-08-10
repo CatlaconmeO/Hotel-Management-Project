@@ -4,7 +4,7 @@
         <div class="grid md:grid-cols-2 gap-[30px] lg:flex justify-between mb-[60px] relative z-[1]">
             <div class="rts__widget">
                 <a href='/'>
-                    <img class="footer__logo h-12" src="assets/images/logo/logo.svg" alt="footer logo">
+                    <img class="footer__logo h-12" src="{{ asset('assets/images/logo/logo.svg') }}" alt="footer logo">
                 </a>
                 <p class="max-w-[290px] mt-[20px] text-gray-600">
                     Each room features plush bedding, high-quality linens, and a selection of amenities to ensure a restful night's sleep.

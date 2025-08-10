@@ -33,59 +33,128 @@
                         <i class="fas fa-search mr-2"></i> Search
                     </button>
                 </form>
-                <div class="flex flex-wrap gap-2 mt-4 px-2">
-                    <span class="text-xs text-gray-500">Popular searches:</span>
-                    @foreach(['Beachfront','Luxury','Family-friendly','City center'] as $tag)
-                        <button type="button" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition">{{ $tag }}</button>
-                    @endforeach
-                </div>
+{{--                <div class="flex flex-wrap gap-2 mt-4 px-2">--}}
+{{--                    <span class="text-xs text-gray-500">Popular searches:</span>--}}
+{{--                    @foreach(['Beachfront','Luxury','Family-friendly','City center'] as $tag)--}}
+{{--                        <button type="button" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition">{{ $tag }}</button>--}}
+{{--                    @endforeach--}}
+{{--                </div>--}}
             </div>
-        </div>
-
-        {{-- Filter Section --}}
-        <div class="mb-8 flex flex-wrap gap-4 justify-center animate-fade-in-up delay-200">
-            @foreach([
-                ['label'=>'All Locations','options'=>['Hanoi','Ho Chi Minh','Da Nang','Nha Trang']],
-                ['label'=>'Any Price','options'=>['$0 - $50','$50 - $100','$100 - $200','$200+']],
-                ['label'=>'Any Rating','options'=>['5 Stars','4 Stars','3 Stars']],
-            ] as $filter)
-                <div class="relative">
-                    <select class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition">
-                        <option>{{ $filter['label'] }}</option>
-                        @foreach($filter['options'] as $opt)
-                            <option>{{ $opt }}</option>
-                        @endforeach
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <i class="fas fa-chevron-down text-gray-400"></i>
-                    </div>
-                </div>
-            @endforeach
-            <button class="bg-white border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 transition flex items-center animate-pulse-slow">
-                <i class="fas fa-sliders-h mr-2 text-gray-600"></i>
-                <span>More Filters</span>
-            </button>
         </div>
 
         {{-- Content --}}
         @if(!$search)
-            <div class="text-center py-16 animate-fade-in-up delay-300">
-                <div class="max-w-md mx-auto">
-                    <div class="w-24 h-24 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
-                        <i class="fas fa-search text-blue-500 text-3xl animate-bounce"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Find Your Perfect Stay</h3>
-                    <p class="text-gray-600 mb-6">Search for hotels by name, location, or amenities to discover our wide selection of accommodations.</p>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        @foreach([['icon'=>'fa-umbrella-beach','label'=>'Beach Resorts'],['icon'=>'fa-city','label'=>'City Hotels'],['icon'=>'fa-mountain','label'=>'Mountain Lodges'],['icon'=>'fa-spa','label'=>'Spa Retreats']] as $cat)
-                            <div class="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-1 cursor-pointer flex flex-col items-center">
-                                <i class="fas {{ $cat['icon'] }} text-blue-500 text-2xl mb-2"></i>
-                                <p class="text-sm font-medium">{{ $cat['label'] }}</p>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
+            {{-- Show all hotels when no search term --}}
+            <div class="mb-6 animate-fade-in-up delay-300">
+                <p class="text-gray-600">
+                    Showing all available hotels ({{ $hotels->count() }} results)
+                </p>
             </div>
+
+            {{-- Hotel Grid --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in-up delay-400" id="hotelGrid">
+                @foreach($hotels as $hotel)
+                    <div class="hotel-card group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 flex flex-col h-full">
+                        <!-- Image Container -->
+                        <div class="relative h-56 overflow-hidden">
+                            <img
+                                src="{{ asset($hotel->image) }}"
+                                alt="{{ $hotel->name }}"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                loading="lazy"
+                            />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                            <!-- Price Badge -->
+                            @if($hotel->roomTypes && $hotel->roomTypes->count() > 0)
+                                <div class="absolute top-3 right-3">
+                        <span class="bg-indigo-600 text-white text-xs font-medium px-3 py-1 rounded-full shadow-lg">
+                            From {{ number_format($hotel->roomTypes->min('price'), 0, ',', '.') }}₫
+                        </span>
+                                </div>
+                            @endif
+
+                            <!-- Location Badge -->
+                            <div class="absolute bottom-3 left-3">
+                    <span class="bg-black/50 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm flex items-center">
+                        <i class="fas fa-map-marker-alt mr-1 text-indigo-300"></i>
+                        {{ $hotel->address }}
+                    </span>
+                            </div>
+                        </div>
+
+                        <!-- Content Container -->
+                        <div class="p-5 flex flex-col flex-grow">
+                            <!-- Hotel Name and Rating -->
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition">{{ $hotel->name }}</h3>
+                                <div class="flex items-center">
+                                    @php
+                                        $reviews = $hotel->reviews()->exists() ? $hotel->reviews : collect();
+                                        $averageRating = $reviews->count() > 0 ? $reviews->avg('rating') : 0;
+                                        $formattedRating = number_format($averageRating, 1);
+                                    @endphp
+                                    <span class="text-amber-500 text-sm font-medium">{{ $formattedRating }}</span>
+                                    <i class="fas fa-star ml-1 text-amber-400 text-sm"></i>
+                                    <span class="text-gray-500 text-xs ml-2">({{ $reviews->count() }})</span>
+                                </div>
+                            </div>
+
+                            <!-- Features/Amenities -->
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                @foreach($hotel->branches as $branch)
+                                    <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
+                            {{ $branch->name }}
+                        </span>
+                                @endforeach
+
+                                @if($hotel->amenities && $hotel->amenities->count() > 0)
+                                    @foreach($hotel->amenities->take(2) as $amenity)
+                                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                {{ $amenity->name }}
+                            </span>
+                                    @endforeach
+                                    @if($hotel->amenities->count() > 2)
+                                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                +{{ $hotel->amenities->count() - 2 }}
+                            </span>
+                                    @endif
+                                @endif
+                            </div>
+
+                            <!-- Description -->
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">
+                                {{ Str::limit($hotel->description, 120) }}
+                            </p>
+
+                            <!-- Room Availability -->
+                            @if($hotel->rooms && $hotel->rooms->count() > 0)
+                                <div class="mb-4 text-xs text-green-600 flex items-center">
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    {{ $hotel->rooms->count() }} rooms available
+                                </div>
+                            @endif
+
+                            <!-- Action Buttons -->
+                            <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                                <a href="{{ route('hotels.show', $hotel) }}"
+                                   class="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-semibold py-2 px-5 rounded-lg transition">
+                                    View Details
+                                </a>
+                                <button class="p-2 text-gray-500 hover:text-red-500 transition">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- Pagination --}}
+            @if($hotels->hasPages())
+                <div class="mt-12 flex justify-center">
+                    {{ $hotels->withQueryString()->links() }}
+                </div>
+            @endif
         @else
             @if($hotels->count() > 0)
                 <div class="mb-6 animate-fade-in-up delay-300">
@@ -98,29 +167,95 @@
                 {{-- Hotel Grid --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in-up delay-400" id="hotelGrid">
                     @foreach($hotels as $hotel)
-                        <div class="hotel-card group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transform group-hover:scale-105 transition duration-500">
+                        <div class="hotel-card group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 flex flex-col h-full">
+                            <!-- Image Container -->
                             <div class="relative h-56 overflow-hidden">
-                                <img src="{{ asset($hotel->logo) }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                <img
+                                    src="{{ asset($hotel->image) }}"
+                                    alt="{{ $hotel->name }}"
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    loading="lazy"
+                                />
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                <div class="absolute top-3 right-3 bg-white/80 rounded-full w-10 h-10 flex items-center justify-center shadow-md">
-                                    <i class="fas fa-heart text-gray-600 hover:text-red-500 transition"></i>
+
+                                <!-- Price Badge -->
+                                @if($hotel->roomTypes && $hotel->roomTypes->count() > 0)
+                                    <div class="absolute top-3 right-3">
+                        <span class="bg-indigo-600 text-white text-xs font-medium px-3 py-1 rounded-full shadow-lg">
+                            From {{ number_format($hotel->roomTypes->min('price'), 0, ',', '.') }}₫
+                        </span>
+                                    </div>
+                                @endif
+
+                                <!-- Location Badge -->
+                                <div class="absolute bottom-3 left-3">
+                    <span class="bg-black/50 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm flex items-center">
+                        <i class="fas fa-map-marker-alt mr-1 text-indigo-300"></i>
+                        {{ $hotel->address }}
+                    </span>
                                 </div>
                             </div>
-                            <div class="p-6">
-                                <div class="flex justify-between items-start mb-2">
-                                    <h3 class="text-lg font-semibold text-gray-900">{{ $hotel->name }}</h3>
-                                    <p class="text-gray-500 text-sm flex items-center">
-                                        <i class="fas fa-map-marker-alt mr-1 text-indigo-500"></i>
-                                        {{ $hotel->address }}
-                                    </p>
+
+                            <!-- Content Container -->
+                            <div class="p-5 flex flex-col flex-grow">
+                                <!-- Hotel Name and Rating -->
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition">{{ $hotel->name }}</h3>
+                                    <div class="flex items-center">
+                                        @php
+                                            $reviews = $hotel->reviews()->exists() ? $hotel->reviews : collect();
+                                            $averageRating = $reviews->count() > 0 ? $reviews->avg('rating') : 0;
+                                            $formattedRating = number_format($averageRating, 1);
+                                        @endphp
+                                        <span class="text-amber-500 text-sm font-medium">{{ $formattedRating }}</span>
+                                        <i class="fas fa-star ml-1 text-amber-400 text-sm"></i>
+                                        <span class="text-gray-500 text-xs ml-2">({{ $reviews->count() }})</span>
+                                    </div>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+
+                                <!-- Features/Amenities -->
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    @foreach($hotel->branches as $branch)
+                                        <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
+                            {{ $branch->name }}
+                        </span>
+                                    @endforeach
+
+                                    @if($hotel->amenities && $hotel->amenities->count() > 0)
+                                        @foreach($hotel->amenities->take(2) as $amenity)
+                                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                {{ $amenity->name }}
+                            </span>
+                                        @endforeach
+                                        @if($hotel->amenities->count() > 2)
+                                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                +{{ $hotel->amenities->count() - 2 }}
+                            </span>
+                                        @endif
+                                    @endif
+                                </div>
+
+                                <!-- Description -->
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">
                                     {{ Str::limit($hotel->description, 120) }}
                                 </p>
-                                <div class="flex justify-between items-center">
-                                    <a href="{{ route('hotels.show', $hotel) }}" class="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-semibold py-2 px-5 rounded-lg transition transform hover:-translate-y-1">
+
+                                <!-- Room Availability -->
+                                @if($hotel->rooms && $hotel->rooms->count() > 0)
+                                    <div class="mb-4 text-xs text-green-600 flex items-center">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        {{ $hotel->rooms->count() }} rooms available
+                                    </div>
+                                @endif
+
+                                <!-- Action Buttons -->
+                                <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                                    <a href="{{ route('hotels.show', $hotel) }}"
+                                       class="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-semibold py-2 px-5 rounded-lg transition">
                                         View Details
                                     </a>
+                                    <button class="p-2 text-gray-500 hover:text-red-500 transition">
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -136,16 +271,7 @@
             @else
                 {{-- No Results --}}
                 <div class="text-center py-16 animate-fade-in-up delay-300">
-                    <div class="max-w-md mx-auto">
-                        <div class="w-20 h-20 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-exclamation-circle text-red-500 text-3xl animate-shake"></i>
-                        </div>
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">No Results Found</h3>
-                        <p class="text-gray-600 mb-6">We couldn't find any hotels matching your search. Try adjusting your filters or search for something different.</p>
-                        <button onclick="document.querySelector('input[name=search]').value=''; document.querySelector('form').submit();" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition transform hover:-translate-y-0.5">
-                            Clear Search
-                        </button>
-                    </div>
+                    <!-- Existing no results content -->
                 </div>
             @endif
         @endif

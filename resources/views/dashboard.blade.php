@@ -8,7 +8,7 @@
     </div>
 
     <!-- Facility Section -->
-    <div class="relative lg:p-[120px_0] p-[80px_0] bg-white before:absolute before:content-[''] before:w-[48.5%] before:h-[335px] before:bg-gray-50 before:right-0 before:bottom-0 before:-z-10 before:hidden lg:before:block">
+    <div class="relative lg:p-[120px_0] p-[40px_0] bg-white before:absolute before:content-[''] before:w-[48.5%] before:h-[335px] before:bg-gray-50 before:right-0 before:bottom-0 before:-z-10 before:hidden lg:before:block">
         <div class="container">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-[50px]">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-[50px]">
@@ -45,53 +45,6 @@
                     <div class="img shadow-md rounded-md overflow-hidden">
                         <img height="325" width="645" class="w-full" src="{{ asset('assets/images/index-5/facility.webp') }}" alt="">
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Rooms Section -->
-    <div class="relative p-[120px_0] bg-gray-50">
-        <div class="container">
-            <div class="flex justify-between items-center flex-wrap gap-[30px] lg:gap-0 mb-[40px]">
-                <div>
-                    <span class="text-sm font-medium relative mb-[15px] left-[65px] text-blue-500 inline-block before:absolute before:left-[-65px] before:bottom-[50%] before:w-[52px] before:h-[12px] before:bg-no-repeat before:bg-[url('../images/shape/section__style__two.svg')] before:transform before:translate-y-2/4">Our Room</span>
-                    <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 capitalize">Our Rooms</h2>
-                </div>
-                <div>
-                    <p class="text-gray-600 max-w-[645px]">
-                        Our rooms offer a harmonious blend of comfort and elegance, designed to provide an exceptional stay for every guest. Each room features plush bedding, high-quality linens, and a selection of pillows to ensure a restful night's sleep.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="full__width px-4 md:px-0">
-            <div class="apartment__slider overflow-hidden">
-                <div class="swiper-wrapper">
-                    @for ($i = 1; $i <= 6; $i++)
-                        <div class="swiper-slide">
-                            <div class="relative bg-white shadow-md rounded-md overflow-hidden">
-                                <div class="img">
-                                    <img height="500" width="610" src="{{ asset('assets/images/index-3/apartment/1.webp') }}" alt="apartment">
-                                </div>
-                                <div class="p-[35px_30px] flex justify-between animate-content hidden">
-                                    <div class="flex flex-col gap-[10px]">
-                                        <a class='apartment__title anim-1 hover:text-blue-500 transition-colors' href='/room-details-2'>
-                                            <h5 class="text-lg font-medium text-gray-800">Elegant Apartment</h5>
-                                        </a>
-                                        <div class="flex gap-[20px] anim-2 text-gray-600">
-                                            <span class="flex gap-[10px] items-center"><i class="flaticon-construction"></i>35 sqm</span>
-                                            <span class="flex gap-[10px] items-center"><i class="flaticon-user"></i>5 Person</span>
-                                        </div>
-                                    </div>
-                                    <span class="price text-xl font-semibold text-blue-500">200$</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-                <div class="rts__pagination">
-                    <div class="rts-pagination"></div>
                 </div>
             </div>
         </div>

@@ -27,9 +27,9 @@ new #[Layout('layouts.app')] class extends Component
     <div class="w-full max-w-md">
         <div class="bg-white rounded-[16px] shadow-[0_30px_30px_rgba(175,175,175,0.16)] overflow-hidden">
             <!-- Header -->
-            <div class="bg-[#18181B] py-6 px-8 text-center">
+            <div class="bg-[#3B82F6] py-6 px-8 text-center">
                 <h1 class="text-3xl font-bold text-white">Welcome Back</h1>
-                <p class="text-gray-300 mt-2">Login to your Moonlit account</p>
+                <p class="text-white mt-2">Login to your Moonlit account</p>
             </div>
 
             <!-- Form -->
@@ -45,7 +45,7 @@ new #[Layout('layouts.app')] class extends Component
                                 <i class="fas fa-envelope text-gray-400"></i>
                             </div>
                             <input wire:model.defer="form.email" type="email" id="email" name="email"
-                                   class="pl-10 w-full px-8 py-3 rounded-[6px] border border-gray-300 focus:outline-none focus:border-[#AB8A62] transition duration-200"
+                                   class="pl-10 w-full px-8 py-3 rounded-[6px] border border-gray-300 focus:outline-none focus:border-[#3B82F6] transition duration-200"
                                    placeholder="you@example.com" required>
                         </div>
                         <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
@@ -56,7 +56,7 @@ new #[Layout('layouts.app')] class extends Component
                         <div class="flex justify-between items-center mb-1">
                             <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                             @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}" class="text-xs text-[#AB8A62] hover:underline" wire:navigate>
+                                <a href="{{ route('password.request') }}" class="text-xs text-[#3B82F6] hover:underline" wire:navigate>
                                     Forgot password?
                                 </a>
                             @endif
@@ -66,7 +66,7 @@ new #[Layout('layouts.app')] class extends Component
                                 <i class="fas fa-lock text-gray-400"></i>
                             </div>
                             <input wire:model.defer="form.password" type="password" id="password" name="password"
-                                   class="pl-10 w-full px-8 py-3 rounded-[6px] border border-gray-300 focus:outline-none focus:border-[#AB8A62] transition duration-200"
+                                   class="pl-10 w-full px-8 py-3 rounded-[6px] border border-gray-300 focus:outline-none focus:border-[#3B82F6] transition duration-200"
                                    placeholder="••••••••" required>
                             <button type="button" id="togglePassword" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
                                 <i class="fas fa-eye"></i>
@@ -75,16 +75,9 @@ new #[Layout('layouts.app')] class extends Component
                         <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
                     </div>
 
-                    <!-- Remember -->
-                    <div class="flex items-center">
-                        <input wire:model="form.remember" type="checkbox" id="remember" name="remember"
-                               class="h-4 w-4 text-[#AB8A62] border-gray-300 rounded">
-                        <label for="remember" class="ml-2 text-sm text-gray-700">Remember me</label>
-                    </div>
-
                     <!-- Submit -->
                     <button type="submit"
-                            class="w-full bg-[#AB8A62] text-white py-3 px-4 rounded-[6px] font-medium hover:bg-[#937452] transition duration-200">
+                            class="w-full bg-[#3B82F6] text-white py-3 px-4 rounded-[6px] font-medium hover:bg-[#937452] transition duration-200">
                         Sign In
                     </button>
                 </form>
@@ -93,7 +86,7 @@ new #[Layout('layouts.app')] class extends Component
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600">
                         Don’t have an account?
-                        <a href="{{ route('register') }}" class="text-[#AB8A62] hover:underline" wire:navigate>
+                        <a href="{{ route('register') }}" class="text-[#3B82F6] hover:underline" wire:navigate>
                             Sign up
                         </a>
                     </p>
