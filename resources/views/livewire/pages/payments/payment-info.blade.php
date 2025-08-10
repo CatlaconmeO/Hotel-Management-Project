@@ -122,7 +122,7 @@
                                             <p class="text-green-800 font-medium">Voucher
                                                 Applied: {{ $booking->voucher->code }}</p>
                                             <p class="text-green-600 text-sm">Discount:
-                                                -{{ number_format($booking->discount_amount, 0, ',', '.') }} ₫</p>
+                                                -{{ number_format($booking->getDiscountAmount(), 0, ',', '.') }} ₫</p>
                                         </div>
                                     </div>
                                     <form method="POST" action="{{ route('payments.remove-voucher', $booking) }}"
@@ -155,17 +155,17 @@
                                 <span class="font-medium text-gray-800">{{ number_format($booking->bookingDetail->price, 0, ',', '.') }} ₫</span>
                             </div>
 
-                            @if($booking->voucher_id && $booking->discount_amount > 0)
+                            @if($booking->voucher_id && $booking->getDiscountAmount() > 0)
                                 <div class="flex justify-between items-center text-green-600">
                                     <span>Discount ({{ $booking->voucher->code }})</span>
-                                    <span class="font-medium">-{{ number_format($booking->discount_amount, 0, ',', '.') }} ₫</span>
+                                    <span class="font-medium">-{{ number_format($booking->getDiscountAmount(), 0, ',', '.') }} ₫</span>
                                 </div>
                             @endif
 
                             <div class="border-t border-gray-200 pt-3 mt-3">
                                 <div class="flex justify-between items-center">
                                     <span class="text-lg font-semibold text-gray-800">Total Amount</span>
-                                    <span class="text-2xl font-bold text-indigo-600">{{ number_format($booking->bookingDetail->price - $booking->discount_amount, 0, ',', '.') }} ₫</span>
+                                    <span class="text-2xl font-bold text-indigo-600">{{ number_format($booking->bookingDetail->price - $booking->getDiscountAmount(), 0, ',', '.') }} ₫</span>
                                 </div>
                             </div>
                         </div>

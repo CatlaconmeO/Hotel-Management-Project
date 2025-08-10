@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BookingStatusEnum;
+use App\Services\VoucherService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +18,6 @@ class Booking extends Model
         'status',
         'team_id',
         'voucher_id',
-        'discount_amount',
     ];
 
     protected $casts = [
@@ -82,6 +82,16 @@ class Booking extends Model
     public function canRemoveVoucher(): bool
     {
         return $this->hasVoucher() && $this->status === BookingStatusEnum::Pending;
+    }
+
+    public function getDiscountAmount()
+    {
+        if (!$this->hasVoucher() || !$this->voucher) {
+            return 0;
+        }
+
+        $voucherService = app(VoucherService::class);
+        return $voucherService->calculateDiscount($this->voucher, $this->bookingDetail->price);
     }
 
 }

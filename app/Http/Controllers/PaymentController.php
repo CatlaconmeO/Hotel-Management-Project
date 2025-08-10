@@ -6,10 +6,8 @@ use App\Enums\BookingStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\RoomStatusEnum;
 use App\Services\VnpayService;
-use App\Models\Room;
 use App\Models\Booking;
 use App\Services\VoucherService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Payment;
@@ -30,7 +28,13 @@ class PaymentController extends Controller
                 ->with('error', 'Error. Please try again.');
         }
 
-        $finalAmount = $booking->bookingDetail->price - $booking->discount_amount;
+        $finalAmount = $booking->bookingDetail->price;
+
+        if ($booking->hasVoucher() && $booking->voucher) {
+            $voucherService = app(VoucherService::class);
+            $discount = $voucherService->calculateDiscount($booking->voucher, $finalAmount);
+            $finalAmount -= $discount;
+        }
 
         return view('livewire.pages.payments.payment-info', compact('booking', 'finalAmount'));
     }
@@ -78,7 +82,6 @@ class PaymentController extends Controller
 
                 $booking->update([
                     'voucher_id' => null,
-                    'discount_amount' => 0,
                 ]);
             });
 
@@ -99,6 +102,11 @@ class PaymentController extends Controller
         );
 
         $finalAmount = $booking->bookingDetail->price;
+        if ($booking->hasVoucher() && $booking->voucher) {
+            $voucherService = app(VoucherService::class);
+            $discount = $voucherService->calculateDiscount($booking->voucher, $finalAmount);
+            $finalAmount -= $discount;
+        }
         // Nếu là GET request -> hiển thị thông tin
         if ($request->isMethod('get')) {
             return view('livewire.pages.payments.payment-info', compact('booking', 'finalAmount'));
@@ -111,7 +119,8 @@ class PaymentController extends Controller
                 'amount' => $finalAmount,
                 'payment_method' => 'vnpay',
                 'status' => 'pending',
-                'response_data' => null
+                'response_data' => null,
+                'team_id' => $booking->team_id,
             ]);
 
             $booking->bookingDetail->update(['price' => $finalAmount]);

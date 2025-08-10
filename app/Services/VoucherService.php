@@ -36,7 +36,7 @@ class VoucherService
             return min($voucher->amount, $totalAmount);
         }
 
-        return round($totalAmount * ($voucher->amount / 100), 2);
+        return round($totalAmount * ($voucher->amount / 100), 0);
     }
 
     public function applyVoucher(Booking $booking, Voucher $voucher): void
@@ -45,7 +45,6 @@ class VoucherService
 
         $booking->update([
             'voucher_id' => $voucher->id,
-            'discount_amount' => $discountAmount,
         ]);
 
         $voucher->increment('used_count');

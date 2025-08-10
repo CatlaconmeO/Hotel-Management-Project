@@ -27,6 +27,9 @@ class Customer extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
     ];
 
+    protected $casts = [
+        'date_of_birth' => 'date',
+    ];
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);

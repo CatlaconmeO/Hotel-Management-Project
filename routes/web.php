@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RoomController;
@@ -27,14 +28,13 @@ Route::middleware(['auth'])->group(function () {
     })->name('profile');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/hotels', [TeamController::class, 'index'])
-        ->name('hotels.index');
-    Route::get('/hotels/{hotel}', [TeamController::class, 'show'])
-        ->name('hotels.show');
-    Route::get('/hotels/{hotel}/branches/{branch}/rooms/{room}', [RoomController::class, 'show'])
-        ->name('rooms.show');
-});
+Route::get('/hotels', [TeamController::class, 'index'])
+    ->name('hotels.index');
+Route::get('/hotels/{hotel}', [TeamController::class, 'show'])
+    ->name('hotels.show');
+Route::get('/hotels/{hotel}/branches/{branch}/rooms/{room}', [RoomController::class, 'show'])
+    ->name('rooms.show');
+
 
 Route::post('rooms/{room}/booking', [BookingController::class, 'store'])
     ->middleware('auth')
@@ -73,3 +73,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::post('/upload', [UploadController::class, 'upload']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('carts.index');
+    Route::post('/cart/add/{room}', [CartController::class, 'addItem'])->name('carts.addItem');
+    Route::delete('/cart/remove/{cartItem}', [CartController::class, 'removeItem'])->name('carts.remove');
+    Route::put('/cart/update/{cartItem}', [CartController::class, 'updateQuantity'])->name('cart.update');
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+});
